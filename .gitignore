@@ -1,0 +1,34 @@
+.venv/
+venv/
+env/
+.env
+.env.*
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+.DS_Store
+__MACOSX/
+
+# Local market data and generated research artifacts.
+/runs/
+/data/
+/data_train/
+/data_holdout/
+
+# Draft publishing copy stays local.
+reports/medium_article.md
+
+reports/figures/*
+!reports/figures/.gitkeep
+
+*.egg-info/
+dist/
+build/

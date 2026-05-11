@@ -1,0 +1,63 @@
+# Reversal strategy config
+experiment:
+  name: reversal_scope
+  run_dir: runs
+
+data:
+  root: data
+  interval: 5m
+  venue: spot
+  symbols: null
+  exclude_symbols: true
+  benchmark_symbol: BTCUSDT
+
+universe:
+  enabled: true
+  top_n: 60
+  dv_window: 288        # 24h for 5m bars (12*24=288)
+  min_history_bars: 600
+  lag_bars: 1
+
+signal:
+  name: shock_fade
+  lookback_bars: 3      # 15m for 5m bars
+  lag_bars: 1
+  z_entry: 1.5
+  beta:
+    benchmark_symbol: BTCUSDT
+    window: 288
+  # Single mitigation attempt: low-volume filter.
+  volume_filter:
+    enabled: true
+    vol_window: 288
+    z_max: -0.25
+
+portfolio:
+  long_quantile: 0.2
+  short_quantile: 0.2
+  hold_bars: 1
+  gross_leverage: 1.0
+  max_abs_weight: 0.05
+  neutralize: dollar
+  vol_target:
+    enabled: true
+    target_ann_vol: 0.15
+    vol_window: 1000
+    max_leverage: 3.0
+
+execution:
+  cost_model: bps
+  bps_per_turnover: 20
+
+validation:
+  walk_forward:
+    enabled: false
+    train_bars: 20000
+    test_bars: 4000
+    embargo_bars: 2
+
+sweep:
+  enabled: true
+  grid:
+    signal.name: [shock_fade, beta_residual_fade]
+    execution.bps_per_turnover: [10, 20]

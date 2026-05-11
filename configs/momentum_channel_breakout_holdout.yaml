@@ -1,0 +1,61 @@
+# BTCUSDT 1h channel-breakout holdout test.
+# This config evaluates the frozen pre-holdout candidate on 2024 data only.
+experiment:
+  name: btcusdt_channel_breakout_holdout_2024
+  run_dir: runs
+
+data:
+  root: data_holdout
+  interval: 1h
+  venue: spot
+  symbols: [BTCUSDT]
+  exclude_symbols: true
+  benchmark_symbol: BTCUSDT
+
+universe:
+  enabled: true
+  top_n: 1
+  dv_window: 168
+  min_history_bars: 200
+  lag_bars: 1
+
+signal:
+  name: channel_breakout
+  entry_lookback: 168
+  exit_lookback: 72
+  lag_bars: 1
+
+candidate_selection:
+  status: frozen_pre_holdout
+  selected_from_run: runs/btcusdt_channel_breakout_train_20260504_042439
+  selection_data: data_train
+  selection_period: 2021-01-01_to_2024-01-01
+  holdout_data: data_holdout
+  holdout_period: 2024-01-01_to_2025-01-01
+  entry_lookback: 168
+  exit_lookback: 72
+  headline_bps_per_turnover: 20
+  rule: do_not_change_after_holdout_results
+
+portfolio:
+  long_quantile: 0.2
+  short_quantile: 0.0
+  hold_bars: 1
+  gross_leverage: 1.0
+  max_abs_weight: 0.05
+  neutralize: none
+  vol_target:
+    enabled: true
+    target_ann_vol: 0.15
+    vol_window: 336
+    max_leverage: 3.0
+
+execution:
+  cost_model: bps
+  bps_per_turnover: 20
+
+validation:
+  holdout:
+    enabled: true
+    frozen_candidate: true
+    period: 2024-01-01_to_2025-01-01

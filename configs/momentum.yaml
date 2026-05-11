@@ -1,0 +1,56 @@
+# Momentum strategy config
+experiment:
+  name: momentum_baseline
+  run_dir: runs
+
+data:
+  root: data
+  interval: 1h
+  venue: spot   # spot or futures
+  # If symbols is null, the loader will infer symbols from data directory.
+  symbols: null
+  # Benchmark for beta/alpha (must exist in your downloaded data set)
+  benchmark_symbol: BTCUSDT
+
+universe:
+  enabled: true
+  top_n: 30
+  dv_window: 168         # rolling window in bars (168 = 7 days for 1h)
+  min_history_bars: 200  # warmup
+
+signal:
+  name: momentum
+  lookback_bars: 24      # 24h lookback for 1h bars
+  lag_bars: 1
+
+portfolio:
+  long_quantile: 0.2
+  short_quantile: 0.2
+  gross_leverage: 1.0
+  max_abs_weight: 0.05
+  neutralize: dollar     # dollar or none
+  vol_target:
+    enabled: true
+    target_ann_vol: 0.15
+    vol_window: 336      # 14d for 1h bars
+    max_leverage: 3.0
+
+execution:
+  cost_model: bps
+  bps_per_turnover: 20   # market order assumption
+  # bps_per_turnover: 7  # uncomment for limit order assumption
+
+validation:
+  walk_forward:
+    enabled: false
+    train_bars: 4000
+    test_bars: 1000
+    embargo_bars: 5
+
+sweep:
+  enabled: true
+  grid:
+    lookback_bars: [6, 12, 24, 48, 72, 168]
+    long_quantile: [0.1, 0.2]
+    short_quantile: [0.1, 0.2]
+    bps_per_turnover: [7, 20]

@@ -1,0 +1,71 @@
+# BTCUSDT 1h channel-breakout time-series momentum feature study.
+# This config is for exploration/training on 2021-2023 data only.
+experiment:
+  name: btcusdt_channel_breakout_train
+  run_dir: runs
+
+data:
+  root: data_train
+  interval: 1h
+  venue: spot
+  symbols: [BTCUSDT]
+  exclude_symbols: true
+  benchmark_symbol: BTCUSDT
+
+universe:
+  enabled: true
+  top_n: 1
+  dv_window: 168
+  min_history_bars: 200
+  lag_bars: 1
+
+signal:
+  name: channel_breakout
+  entry_lookback: 168
+  exit_lookback: 72
+  lag_bars: 1
+
+candidate_selection:
+  status: frozen_pre_holdout
+  selected_from_run: runs/btcusdt_channel_breakout_train_20260504_042439
+  selection_data: data_train
+  selection_period: 2021-01-01_to_2024-01-01
+  holdout_period: 2024-01-01_to_2025-01-01
+  entry_lookback: 168
+  exit_lookback: 72
+  headline_bps_per_turnover: 20
+  rationale: >
+    Selected before holdout because the 168-entry region was broadly stable
+    across exit lookbacks, and exit_lookback 72 had the lowest turnover among
+    strong candidates while remaining positive net of 20 bps costs.
+
+portfolio:
+  long_quantile: 0.2
+  short_quantile: 0.0
+  hold_bars: 1
+  gross_leverage: 1.0
+  max_abs_weight: 0.05
+  neutralize: none
+  vol_target:
+    enabled: true
+    target_ann_vol: 0.15
+    vol_window: 336
+    max_leverage: 3.0
+
+execution:
+  cost_model: bps
+  bps_per_turnover: 20
+
+validation:
+  walk_forward:
+    enabled: false
+    train_bars: 4000
+    test_bars: 1000
+    embargo_bars: 5
+
+sweep:
+  enabled: true
+  grid:
+    signal.entry_lookback: [24, 48, 72, 120, 168]
+    signal.exit_lookback: [6, 12, 24, 48, 72]
+    execution.bps_per_turnover: [10, 20]
