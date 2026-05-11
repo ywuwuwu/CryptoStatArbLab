@@ -112,10 +112,3 @@ CryptoStatArbLab/
 
 ---
 
-## Typical interview talking points
-
-- Why momentum uses 1h bars and reversal uses 5m bars
-- How costs + turnover change the conclusion
-- Why net-of-cost results are the headline
-- Walk-forward stability vs single best in-sample Sharpe
-- Next steps: capacity, per-exchange data validation, funding/borrow effects

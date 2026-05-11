@@ -25,6 +25,7 @@ __MACOSX/
 
 # Draft publishing copy stays local.
 reports/medium_article.md
+docs/daily_routine.md
 
 reports/figures/*
 !reports/figures/.gitkeep
